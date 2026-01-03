@@ -1,0 +1,161 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import './App.css'
+import BookingModal from './BookingModal' // Import Modal
+
+function App() {
+  const [rooms, setRooms] = useState([])
+  const [filteredRooms, setFilteredRooms] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [roomTypes, setRoomTypes] = useState([])
+  const [selectedType, setSelectedType] = useState('ALL')
+  
+  // State để quản lý Modal
+  const [selectedRoom, setSelectedRoom] = useState(null); // Phòng đang chọn để đặt
+
+  // --- LƯU Ý: Thay PORT của API máy cậu vào đây ---
+  const API_URL = "http://localhost:5271/api/Room/available"; 
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        const data = response.data;
+        setRooms(data);
+        setFilteredRooms(data);
+        setLoading(false);
+        const types = ['ALL', ...new Set(data.map(room => room.type))];
+        setRoomTypes(types);
+      } catch (error) {
+        console.error("Lỗi gọi API:", error);
+        setLoading(false);
+      }
+    };
+    fetchRooms();
+  }, []);
+
+  const handleFilterChange = (e) => {
+    const type = e.target.value;
+    setSelectedType(type);
+    if (type === 'ALL') {
+      setFilteredRooms(rooms);
+    } else {
+      const filtered = rooms.filter(room => room.type === type);
+      setFilteredRooms(filtered);
+    }
+  };
+
+  // Hàm mở Modal
+  const handleBookClick = (room) => {
+    setSelectedRoom(room);
+  };
+
+  // Hàm đóng Modal
+  const handleCloseModal = () => {
+    setSelectedRoom(null);
+  };
+
+  return (
+    <div className="app-container">
+      {/* Navbar giả lập */}
+      <nav className="navbar">
+        <div className="logo">MATERIALLY HOTELS</div>
+        <ul className="nav-links">
+          <li>HOME</li>
+          <li>ROOMS & SUITES</li>
+          <li>DINING</li>
+          <li>SPA</li>
+          <li className="active">BOOK NOW</li>
+        </ul>
+      </nav>
+
+      {/* Hero Banner */}
+      <header className="hero">
+        <div className="hero-content">
+          <p className="subtitle">WELCOME TO PARADISE</p>
+          <h1>Luxury & Resort Suites</h1>
+          <div className="divider"></div>
+          <p className="description">Trải nghiệm kỳ nghỉ đẳng cấp thượng lưu với dịch vụ 5 sao chuẩn quốc tế.</p>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="content">
+        <div className="section-title">
+          <h2>Accommodations</h2>
+          <p>Tìm không gian hoàn hảo cho kỳ nghỉ của bạn</p>
+          
+          {!loading && (
+            <div className="filter-container">
+              <label className="filter-label">Filter by Room Type:</label>
+              <select className="filter-select" value={selectedType} onChange={handleFilterChange}>
+                {roomTypes.map((type, index) => (
+                  <option key={index} value={type}>
+                    {type === 'ALL' ? 'Show All Rooms' : type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <p style={{marginTop: '10px', fontSize: '0.9rem'}}>Hiển thị {filteredRooms.length} phòng trống</p>
+        </div>
+        
+        {loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Đang tìm phòng tốt nhất cho bạn...</p>
+          </div>
+        ) : (
+          <div className="room-grid">
+            {filteredRooms.map((room) => (
+              <div key={room.id} className="room-card">
+                <div className="room-image-wrapper">
+                  <img src={`https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80&sig=${room.id}`} alt="Hotel Room" />
+                  <div className="price-badge">
+                    <span className="currency">VND</span>
+                    <span className="amount">{room.price.toLocaleString()}</span>
+                    <span className="period">/ Night</span>
+                  </div>
+                </div>
+                
+                <div className="room-details">
+                  <span className="room-type">{room.type}</span>
+                  <h3 className="room-number">Room {room.roomNumber}</h3>
+                  <div className="room-features">
+                    <span>👥 {room.capacity} Guests</span>
+                    <span>📐 45m²</span>
+                    <span>📶 Free Wifi</span>
+                  </div>
+                  <div className="card-footer">
+                    <button className="btn-detail">DETAILS</button>
+                    {/* SỰ KIỆN CLICK MỚI */}
+                    <button className="btn-book" onClick={() => handleBookClick(room)}>
+                      BOOK NOW
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-content">
+          <h3>MATERIALLY HOTEL</h3>
+          <p>123 Beach Road, Danang City, Vietnam</p>
+          <p>Hotline: (+84) 909 123 456</p>
+          <p className="copyright">© 2026 Materially Hotel Group. All rights reserved.</p>
+        </div>
+      </footer>
+
+      {/* HIỂN THỊ MODAL NẾU CÓ PHÒNG ĐƯỢC CHỌN */}
+      {selectedRoom && (
+        <BookingModal room={selectedRoom} onClose={handleCloseModal} />
+      )}
+    </div>
+  )
+}
+
+export default App

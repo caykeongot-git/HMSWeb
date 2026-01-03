@@ -1,0 +1,766 @@
+/* --- 1. FONTS & VARIABLES --- */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap");
+
+:root {
+  --primary-dark: #2c3e50; /* Xanh đen */
+  --primary-gold: #c5a059; /* Vàng Gold */
+  --gold-hover: #b08d4b;
+  --text-dark: #333333;
+  --text-light: #777777;
+  --bg-light: #f4f7fa;
+  --white: #ffffff;
+}
+
+/* Reset cơ bản quan trọng */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden; /* Chỉ ẩn thanh cuộn ngang thừa */
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  align-items: center;
+}
+
+/* --- 2. NAVBAR (Animation Slide Down) --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  background-color: var(--primary-dark);
+  color: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  animation: slideDown 0.8s ease-out;
+}
+
+.logo {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--primary-gold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+}
+
+.nav-links li {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+/* Hiệu ứng gạch chân chạy từ trái qua phải khi hover menu */
+.nav-links li::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary-gold);
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-links li:hover::after,
+.nav-links li.active::after {
+  width: 100%;
+}
+
+.nav-links li:hover,
+.nav-links li.active {
+  color: var(--primary-gold);
+}
+
+/* --- 3. HERO SECTION (Parallax & Zoom) --- */
+.hero {
+  position: relative;
+  height: 70vh; /* Cao hơn chút cho hoành tráng */
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+}
+
+/* Tạo lớp nền giả để zoom ảnh mà không zoom chữ */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(44, 62, 80, 0.6), rgba(44, 62, 80, 0.6)),
+    url("https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  animation: zoomBg 20s linear infinite alternate; /* Ảnh nền tự động zoom chậm */
+}
+
+.hero-content {
+  padding: 0 20px;
+  width: 100%; /* Đảm bảo content rộng ra */
+  animation: fadeInUp 1.2s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: var(--primary-gold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  margin-bottom: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.divider {
+  width: 0px;
+  height: 4px;
+  background-color: var(--primary-gold);
+  margin: 0 auto 30px;
+  animation: expandWidth 1s ease-out forwards 0.8s;
+}
+
+/* FIX: Căn chỉnh lại dòng mô tả */
+.description {
+  font-size: 1.4rem;
+  opacity: 0.95;
+  width: 100%; /* Chiếm hết chiều rộng có thể */
+  max-width: 1200px; /* Nới rộng tối đa để chứa đủ 1 dòng */
+  margin: 0 auto;
+  font-style: normal; /* Bỏ in nghiêng cho dễ đọc và đỡ lỗi font */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  white-space: nowrap; /* Ép buộc hiển thị trên 1 dòng */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- 4. CONTENT & GRID (FULL WIDTH) --- */
+.content {
+  width: 100%; /* Đảm bảo chiếm hết chiều rộng container cha */
+  max-width: 1400px; /* Giới hạn chiều rộng tối đa cho màn hình lớn */
+  margin: -80px auto 50px; /* margin: top right bottom left -> auto ở trái phải để căn giữa */
+  padding: 0 20px; /* Padding trái phải để không dính sát lề trên mobile */
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex; /* Flex để căn chỉnh con bên trong */
+  flex-direction: column;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 50px;
+  background: white;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border-top: 5px solid var(--primary-gold);
+  animation: fadeInUp 1s ease-out 0.3s backwards; /* Trồi lên */
+  width: 100%; /* Đảm bảo title chiếm hết chiều ngang content */
+}
+
+.section-title h2 {
+  font-family: "Playfair Display", serif;
+  color: var(--primary-dark);
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+/* FIX: Đổi font sang Playfair Display và in nghiêng cho đẹp & hỗ trợ tiếng Việt tốt hơn */
+.section-title p {
+  color: var(--text-light);
+  font-family: "Playfair Display", serif; /* Font mới */
+  font-style: italic; /* In nghiêng */
+  font-weight: 400;
+  font-size: 1.3rem; /* Tăng kích thước chút */
+  margin-top: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* --- BỘ LỌC (MỚI) --- */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.filter-label {
+  font-weight: bold;
+  color: var(--primary-dark);
+  font-size: 1rem;
+}
+
+/* FIX: Style lại khung filter combo box (dropdown) */
+.filter-select {
+  padding: 12px 40px 12px 20px; /* Tăng padding phải để chỗ cho icon */
+  border: 1px solid #ddd;
+  border-radius: 30px; /* Bo tròn mềm mại */
+  font-size: 1rem;
+  color: var(--text-dark);
+  outline: none;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 250px; /* FIX: Tăng chiều rộng để chứa text dài */
+
+  /* Xóa mũi tên mặc định xấu xí của trình duyệt */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Thêm mũi tên custom màu vàng gold */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c5a059%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Bóng đổ nhẹ */
+}
+
+.filter-select:hover,
+.filter-select:focus {
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 8px rgba(197, 160, 89, 0.2);
+}
+
+/* CSS cho các option bên trong (Hỗ trợ tùy trình duyệt) */
+.filter-select option {
+  padding: 12px;
+  background-color: #fff;
+  color: var(--primary-dark);
+  font-size: 1rem;
+}
+
+/* --- ROOM GRID --- */
+.room-grid {
+  display: grid;
+  /* Card to hơn: min 380px */
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 40px;
+  width: 100%; /* Lưới chiếm hết chiều ngang content */
+}
+
+/* --- 5. ROOM CARD VIP PRO --- */
+.room-card {
+  background: var(--white);
+  border: none; /* Bỏ viền để dùng shadow */
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Hiệu ứng nảy nhẹ */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.8s ease-out backwards; /* Từng card trồi lên */
+}
+
+/* Stagger animation cho các card con (giả lập delay) */
+.room-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.room-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.room-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.room-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.room-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.room-card:hover {
+  transform: translateY(-15px) scale(1.02); /* Nổi lên và phóng to nhẹ */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.room-image-wrapper {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+}
+.room-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+.room-card:hover .room-image-wrapper img {
+  transform: scale(1.15) rotate(1deg); /* Ảnh zoom và xoay nhẹ khi hover */
+}
+
+.price-badge {
+  position: absolute;
+  top: 20px; /* Chuyển lên trên góc phải */
+  right: 20px;
+  background-color: rgba(44, 62, 80, 0.9);
+  color: var(--white);
+  padding: 8px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.amount {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-gold);
+}
+.period {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.room-details {
+  padding: 30px;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.room-type {
+  color: var(--primary-gold);
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 10px;
+}
+.room-number {
+  font-family: "Playfair Display", serif;
+  font-size: 2.2rem;
+  margin: 0 0 20px;
+  color: var(--primary-dark);
+}
+
+.room-features {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.room-features span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* BUTTONS VIP */
+.card-footer {
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.btn-detail,
+.btn-book {
+  flex: 1;
+  padding: 15px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden; /* Để chứa hiệu ứng shine */
+}
+
+.btn-detail {
+  background: white;
+  border: 2px solid #e0e0e0;
+  color: var(--text-dark);
+}
+.btn-detail:hover {
+  border-color: var(--primary-dark);
+  background: var(--primary-dark);
+  color: white;
+}
+
+.btn-book {
+  background: var(--primary-gold);
+  border: 2px solid var(--primary-gold);
+  color: white;
+  box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
+}
+
+/* Hiệu ứng Shine (Quét sáng) cho nút Book */
+.btn-book::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: all 0.5s;
+}
+.btn-book:hover::before {
+  left: 100%;
+}
+.btn-book:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(197, 160, 89, 0.6);
+}
+
+/* --- 6. FOOTER --- */
+.footer {
+  background: #1a252f; /* Đen đậm hơn */
+  color: white;
+  padding: 80px 20px 40px;
+  text-align: center;
+  width: 100%;
+  margin-top: auto;
+}
+.footer h3 {
+  font-family: "Playfair Display", serif;
+  color: var(--primary-gold);
+  margin-bottom: 20px;
+  letter-spacing: 4px;
+  font-size: 2rem;
+}
+.footer p {
+  opacity: 0.6;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+.footer .copyright {
+  margin-top: 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 30px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+/* Loading */
+.loading-container {
+  text-align: center;
+  padding: 150px 20px;
+}
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid var(--primary-gold);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 30px;
+}
+
+/* --- 7. ANIMATION KEYFRAMES --- */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes zoomBg {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+@keyframes expandWidth {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100px;
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- 8. RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .hero {
+    height: 50vh;
+  }
+  .navbar {
+    padding: 15px 30px;
+  }
+  .content {
+    width: 95%;
+    margin-top: -60px;
+  }
+  .room-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  } /* Card nhỏ lại xíu trên tablet */
+
+  /* Mobile: Cho phép xuống dòng mô tả nếu màn hình quá nhỏ */
+  .description {
+    white-space: normal;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+  .nav-links {
+    gap: 20px;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero h1 {
+    font-size: 3rem;
+  }
+  .room-grid {
+    grid-template-columns: 1fr;
+  } /* 1 cột trên mobile */
+  .section-title h2 {
+    font-size: 2rem;
+  }
+  .card-footer {
+    flex-direction: column;
+  }
+}
+
+/* --- 8. MODAL (POPUP) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Nền tối mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px); /* Hiệu ứng mờ kính */
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease;
+  border-top: 5px solid var(--primary-gold);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #999;
+  cursor: pointer;
+}
+.close-btn:hover {
+  color: var(--primary-dark);
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.modal-header h2 {
+  font-family: "Playfair Display", serif;
+  color: var(--primary-dark);
+  margin-bottom: 5px;
+}
+.room-name {
+  color: var(--primary-gold);
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #555;
+}
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s;
+}
+.form-group input:focus {
+  border-color: var(--primary-gold);
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+.form-row .form-group {
+  flex: 1;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background: var(--primary-dark);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-submit:hover {
+  background: var(--primary-gold);
+}
+.btn-submit:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.status-msg {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.status-msg.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.status-msg.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
