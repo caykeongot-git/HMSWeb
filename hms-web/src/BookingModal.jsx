@@ -4,7 +4,7 @@ import './App.css';
 
 const BookingModal = ({ room, onClose }) => {
   const [step, setStep] = useState(1); // 1: Info, 2: Payment
-  const [formData, setFormData] = useState({ name: '', phone: '', checkIn: '', checkOut: '' });
+  const [formData, setFormData] = useState({ name: '', phone: '', email: '', checkIn: '', checkOut: '' });
   const [status, setStatus] = useState({ type: '', msg: '' });
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +38,7 @@ const BookingModal = ({ room, onClose }) => {
             roomId: room.id,
             customerName: formData.name,
             customerPhone: formData.phone,
+            customerEmail: formData.email,
             checkIn: formData.checkIn,
             checkOut: formData.checkOut,
             roomNumber: room.roomNumber, // Lưu thêm để hiển thị
@@ -75,6 +76,7 @@ const BookingModal = ({ room, onClose }) => {
         roomId: room.id,
         customerName: formData.name,
         customerPhone: formData.phone,
+        customerEmail: formData.email,
         checkIn: formData.checkIn,
         checkOut: formData.checkOut,
         isPaid: isPaid, 
@@ -113,6 +115,10 @@ const BookingModal = ({ room, onClose }) => {
                     <label>Phone Number</label>
                     <input type="tel" name="phone" required placeholder="09xxxxxxx" onChange={handleChange} />
                 </div>
+                <div className="form-group">
+                  <label>Email (To receive invoice)</label>
+                  <input type="email" name="email" placeholder="example@gmail.com" onChange={handleChange} />
+              </div>
                 <div className="form-row">
                     <div className="form-group"><label>Check-In</label><input type="date" name="checkIn" required onChange={handleChange} /></div>
                     <div className="form-group"><label>Check-Out</label><input type="date" name="checkOut" required onChange={handleChange} /></div>
