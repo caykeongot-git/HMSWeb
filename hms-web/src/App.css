@@ -849,3 +849,38 @@ body {
   font-size: 1.8rem;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
 }
+
+/*--------------------------------------*/
+/* ... (Code cũ của btn-atm) ... */
+
+/* Nút VNPAY - Màu đỏ quyền lực & Vàng cam */
+.btn-vnpay {
+  /* Gradient đỏ đặc trưng của VNPAY pha chút cam cho hiện đại */
+  background: linear-gradient(135deg, #f85032 0%, #e73827 100%);
+}
+
+.btn-vnpay:hover {
+  /* Hover sáng lên rực rỡ */
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+  /* Bóng đổ màu đỏ */
+  box-shadow: 0 10px 25px rgba(231, 56, 39, 0.5);
+  /* Nhích lên chút xíu y hệt 2 nút kia */
+  transform: translateY(-5px);
+}
+
+/* Thêm hiệu ứng Pulse (Nhịp đập) nhẹ để thu hút sự chú ý vào nút này */
+.btn-vnpay {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(231, 56, 39, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(231, 56, 39, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(231, 56, 39, 0);
+  }
+}
