@@ -764,3 +764,88 @@ body {
     opacity: 1;
   }
 }
+
+/* --- PAYMENT BUTTONS STYLING --- */
+
+.payment-options {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-payment {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hiệu ứng ánh sáng lướt qua khi hover */
+.btn-payment::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.btn-payment:hover::after {
+  left: 100%;
+}
+
+.btn-payment:hover {
+  transform: translateY(-5px); /* Nổi lên */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-payment:active {
+  transform: scale(0.95); /* Nhún xuống khi bấm */
+}
+
+/* Nút QR - Màu hồng tím đặc trưng MoMo */
+.btn-qr {
+  background: linear-gradient(135deg, #d82d8b 0%, #a50064 100%);
+}
+
+.btn-qr:hover {
+  background: linear-gradient(135deg, #f04e98 0%, #c70075 100%);
+  box-shadow: 0 10px 20px rgba(165, 0, 100, 0.4);
+}
+
+/* Nút ATM - Màu xanh đại dương tin cậy */
+.btn-atm {
+  background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+}
+
+.btn-atm:hover {
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  box-shadow: 0 10px 20px rgba(0, 131, 176, 0.4);
+}
+
+/* Icon trong nút */
+.btn-icon {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+}

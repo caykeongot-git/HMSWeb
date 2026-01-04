@@ -134,25 +134,25 @@ const BookingModal = ({ room, onClose }) => {
         {status.msg && <div className={`status-msg ${status.type}`}>{status.msg}</div>}
 
         {/* --- KHU VỰC 2 NÚT CHỌN --- */}
-        <div style={{display: 'flex', gap: '10px', marginBottom: '10px'}}>
+        <div className="payment-options">
             {/* Nút 1: Quét mã QR */}
             <button 
-                className="btn-submit" 
-                style={{backgroundColor: '#a50064', flex: 1}} 
+                className="btn-payment btn-qr" 
                 onClick={() => handleMomoPayment("captureWallet")} 
                 disabled={loading}
             >
-                📱 Quét Mã QR (Ví)
+                <span className="btn-icon">📱</span>
+                <span>Quét Mã QR</span>
             </button>
 
             {/* Nút 2: Thẻ ATM */}
             <button 
-                className="btn-submit" 
-                style={{backgroundColor: '#006dcc', flex: 1}} 
+                className="btn-payment btn-atm" 
                 onClick={() => handleMomoPayment("payWithATM")} 
                 disabled={loading}
             >
-                💳 Thẻ ATM Nội Địa
+                <span className="btn-icon">💳</span>
+                <span>Thẻ ATM / Visa</span>
             </button>
         </div>
 
