@@ -89,26 +89,49 @@ const Home = () => {
 
   const API_URL = "https://maximina-nonfluorescent-chaffingly.ngrok-free.dev/api/Room/available"; 
 
-  useEffect(() => {
+useEffect(() => {
     const fetchRooms = async () => {
       try {
+        console.log("Đang gọi API:", API_URL); // Log 1: Xem link đúng chưa
+
         const config = {
             headers: {
-                "ngrok-skip-browser-warning": "true"
+                "ngrok-skip-browser-warning": "true",
+                "Content-Type": "application/json"
             }
         };
-        const response = await axios.get(API_URL);
+
+        const response = await axios.get(API_URL, config);
         const data = response.data;
-        setRooms(data);
-        setFilteredRooms(data);
-        setLoading(false);
-        const types = ['ALL', ...new Set(data.map(room => room.type))];
-        setRoomTypes(types);
+        
+        console.log("Dữ liệu API trả về:", data); // Log 2: Quan trọng nhất!
+
+        // KIỂM TRA: Nếu data là mảng thì mới chạy tiếp
+        if (Array.isArray(data)) {
+            setRooms(data);
+            setFilteredRooms(data);
+            // Sửa lỗi: Chỉ map khi chắc chắn là mảng
+            const types = ['ALL', ...new Set(data.map(room => room.type))];
+            setRoomTypes(types);
+        } else {
+            console.error("🔥 LỖI: API không trả về danh sách!", data);
+            // Nếu data là HTML (chuỗi), nó sẽ hiện ra đây
+            if (typeof data === 'string') {
+                console.warn("⚠️ Có vẻ như Ngrok hoặc Server đang trả về HTML thay vì JSON.");
+            }
+        }
       } catch (error) {
-        console.error("Lỗi gọi API:", error);
+        console.error("❌ Lỗi gọi API:", error);
+        // Log chi tiết lỗi mạng nếu có
+        if (error.response) {
+            console.error("Status:", error.response.status);
+            console.error("Data:", error.response.data);
+        }
+      } finally {
         setLoading(false);
       }
     };
+
     fetchRooms();
   }, []);
 
