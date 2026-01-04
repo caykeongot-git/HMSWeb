@@ -48,7 +48,8 @@ const BookingModal = ({ room, onClose }) => {
         // 2. GỌI API LẤY LINK
         const response = await axios.post(PAYMENT_API, {
             roomNumber: room.roomNumber,
-            customerName: formData.name
+            customerName: formData.name,
+            requestType: type
         });
 
         if (response.data && response.data.payUrl) {
@@ -122,23 +123,44 @@ const BookingModal = ({ room, onClose }) => {
         )}
 
         {step === 2 && (
-            <div className="payment-step">
-                <p style={{textAlign: 'center', marginBottom: '15px'}}>Click below to pay via MoMo Sandbox</p>
-                <div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
-                     {/* FIX: Link ảnh logo MoMo ổn định hơn */}
-                    <img src="https://developers.momo.vn/v3/assets/images/square-8c08a00f550e40a2efafea4a005b1232.png" alt="MoMo Logo" width="100" style={{borderRadius: '15px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}} />
-                </div>
-                
-                {status.msg && <div className={`status-msg ${status.type}`}>{status.msg}</div>}
+    <div className="payment-step">
+        <p style={{textAlign: 'center', marginBottom: '15px'}}>Chọn phương thức thanh toán MoMo Sandbox</p>
+        
+        {/* Logo MoMo giữ nguyên */}
+        <div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
+             <img src="https://developers.momo.vn/v3/assets/images/square-8c08a00f550e40a2efafea4a005b1232.png" alt="MoMo Logo" width="100" style={{borderRadius: '15px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)'}} />
+        </div>
+        
+        {status.msg && <div className={`status-msg ${status.type}`}>{status.msg}</div>}
 
-                <button className="btn-submit" style={{backgroundColor: '#a50064', marginBottom: '10px'}} onClick={handleMomoPayment} disabled={loading}>
-                    {loading ? "CONNECTING..." : "💸 PAY WITH MOMO (500k)"}
-                </button>
-                <button className="btn-detail" style={{width: '100%'}} onClick={() => handleSubmit(false)} disabled={loading}>
-                    Skip Payment (Pay at Hotel)
-                </button>
-            </div>
-        )}
+        {/* --- KHU VỰC 2 NÚT CHỌN --- */}
+        <div style={{display: 'flex', gap: '10px', marginBottom: '10px'}}>
+            {/* Nút 1: Quét mã QR */}
+            <button 
+                className="btn-submit" 
+                style={{backgroundColor: '#a50064', flex: 1}} 
+                onClick={() => handleMomoPayment("captureWallet")} 
+                disabled={loading}
+            >
+                📱 Quét Mã QR (Ví)
+            </button>
+
+            {/* Nút 2: Thẻ ATM */}
+            <button 
+                className="btn-submit" 
+                style={{backgroundColor: '#006dcc', flex: 1}} 
+                onClick={() => handleMomoPayment("payWithATM")} 
+                disabled={loading}
+            >
+                💳 Thẻ ATM Nội Địa
+            </button>
+        </div>
+
+        <button className="btn-detail" style={{width: '100%'}} onClick={() => handleSubmit(false)} disabled={loading}>
+            Skip Payment (Pay at Hotel)
+        </button>
+    </div>
+)}
 
         {step === 3 && (
             <div className="success-step" style={{textAlign: 'center'}}>
