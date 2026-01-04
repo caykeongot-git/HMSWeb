@@ -14,8 +14,7 @@ const PaymentResult = () => {
     const message = searchParams.get('message'); // Lời nhắn từ MoMo
     
     // API tạo booking
-    const BOOKING_API = "https://maximina-nonfluorescent-chaffingly.ngrok-free.dev/api/Booking/create"; 
-
+    const BOOKING_API = `${import.meta.env.VITE_API_BASE_URL}/api/Booking/create`;
     useEffect(() => {
         // Chỉ xử lý 1 lần khi mount
         const handleResult = async () => {

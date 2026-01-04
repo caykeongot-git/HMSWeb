@@ -87,7 +87,7 @@ const Home = () => {
   const [selectedType, setSelectedType] = useState('ALL');
   const [selectedRoom, setSelectedRoom] = useState(null);
 
-  const API_URL = "https://maximina-nonfluorescent-chaffingly.ngrok-free.dev/api/Room/available"; 
+  const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/Room/available`; 
 
 useEffect(() => {
     const fetchRooms = async () => {

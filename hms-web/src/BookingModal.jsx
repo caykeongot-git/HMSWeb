@@ -11,9 +11,10 @@ const BookingModal = ({ room, onClose }) => {
   // --- LƯU Ý QUAN TRỌNG: KIỂM TRA LẠI PORT API ---
   // Hãy chắc chắn Project API của cậu đang chạy ở port nào (5271 hay 7289?)
   // Copy đúng link từ Swagger vào đây.
-  const BOOKING_API = "https://maximina-nonfluorescent-chaffingly.ngrok-free.dev/api/Booking/create"; 
-  const PAYMENT_API = "https://maximina-nonfluorescent-chaffingly.ngrok-free.dev/api/Payment/momo";
-
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const BOOKING_API = `${BASE_URL}/api/Booking/create`; 
+  const PAYMENT_API = `${BASE_URL}/api/Payment/momo`;
+  
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleNext = (e) => {
