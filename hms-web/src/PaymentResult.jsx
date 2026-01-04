@@ -82,7 +82,7 @@ const PaymentResult = () => {
                     <>
                         <div style={{fontSize:'5rem', marginBottom:'10px'}}>✅</div>
                         <h2 style={{color:'#27ae60', fontFamily:'Playfair Display', marginBottom:'10px'}}>Thanh Toán Thành Công!</h2>
-                        <p>Cảm ơn bạn đã đặt phòng tại <strong>Materially Hotel</strong>.</p>
+                        <p>Cảm ơn bạn đã đặt phòng tại <strong>Moshi Hotel</strong>.</p>
                         <p>Đơn đặt phòng của bạn đã được hệ thống ghi nhận.</p>
                         <div className="divider" style={{width:'50px', margin:'20px auto', backgroundColor:'#ccc'}}></div>
                         <button className="btn-book" onClick={() => navigate('/')}>VỀ TRANG CHỦ</button>
