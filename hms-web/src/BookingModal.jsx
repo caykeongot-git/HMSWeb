@@ -28,7 +28,7 @@ const BookingModal = ({ room, onClose }) => {
   };
 
   // --- XỬ LÝ THANH TOÁN MOMO ---
-  const handleMomoPayment = async () => {
+  const handleMomoPayment = async (type) => {
     setLoading(true);
     setStatus({ type: 'info', msg: 'Đang kết nối cổng thanh toán MoMo...' });
 
