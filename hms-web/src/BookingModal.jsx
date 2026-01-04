@@ -209,12 +209,22 @@ const BookingModal = ({ room, onClose }) => {
                 </div>
 
                 <button 
-                    className="btn-submit" 
-                    style={{backgroundColor: '#27ae60', marginBottom: '10px'}} 
-                    onClick={() => handleSubmit(true, "VNPAY QR")} 
+                    type="button" // Quan trọng: Đảm bảo nó là nút bấm thường, không submit bậy bạ
+                    className="btn-confirm" 
+                    onClick={() => {
+                        console.log("Button Clicked!"); // F12 để xem log này nổ là code chạy ngon
+                        handleSubmit(true, "VNPAY QR");
+                    }} 
                     disabled={loading}
                 >
-                    ✅ TÔI ĐÃ THANH TOÁN XONG
+                    {loading ? (
+                        <span>⏳ ĐANG XỬ LÝ...</span> // Hiệu ứng text khi đang loading
+                    ) : (
+                        <>
+                            <span style={{fontSize: '1.4rem'}}>✅</span> 
+                            <span>TÔI ĐÃ THANH TOÁN XONG</span>
+                        </>
+                    )}
                 </button>
 
                 <button 
