@@ -92,6 +92,11 @@ const Home = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
+        const config = {
+            headers: {
+                "ngrok-skip-browser-warning": "true"
+            }
+        };
         const response = await axios.get(API_URL);
         const data = response.data;
         setRooms(data);
