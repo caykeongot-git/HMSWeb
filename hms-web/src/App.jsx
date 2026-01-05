@@ -20,10 +20,11 @@ const LUXURY_IMAGES = [
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80";
 
 const ROOM_DESCRIPTIONS = {
-    "Single": "Phòng đơn sang trọng dành cho doanh nhân với bàn làm việc riêng biệt và tầm nhìn hướng phố nhộn nhịp.",
-    "Double": "Không gian lãng mạn hoàn hảo cho các cặp đôi, thiết kế gam màu ấm áp, bồn tắm nằm thư giãn.",
-    "Suite": "Đẳng cấp thượng lưu 5 sao. Phòng khách riêng biệt, phục vụ rượu vang, view biển Panorama bao trọn vịnh.",
-    "Deluxe": "Trải nghiệm nghỉ dưỡng đỉnh cao với nội thất nhập khẩu từ Ý, ban công rộng thoáng đón gió biển."
+    "Standard King": "Phòng tiêu chuẩn với giường King Size êm ái, thiết kế hiện đại, đầy đủ tiện nghi cho kỳ nghỉ trọn vẹn.",
+    "Deluxe Ocean View": "Tầm nhìn hướng biển tuyệt đẹp với ban công riêng đón gió, nội thất sang trọng nhập khẩu Châu Âu.",
+    "Executive Suite": "Không gian đẳng cấp dành cho doanh nhân với phòng khách và khu vực làm việc tách biệt.",
+    "Royal VIP": "Trải nghiệm phong cách hoàng gia, bồn tắm dát vàng và dịch vụ quản gia riêng 24/7.",
+    "Presidential Suite": "Đỉnh cao của sự xa hoa, diện tích cực lớn với view Panorama toàn cảnh thành phố và biển."
 };
 
 // --- 2. COMPONENT POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
