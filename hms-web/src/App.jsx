@@ -19,6 +19,7 @@ const LUXURY_IMAGES = [
 // Ảnh dự phòng (Nếu ảnh trên bị lỗi thì hiện ảnh này)
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80";
 
+// --- MÔ TẢ PHÒNG (KHỚP VỚI DATABASE CỦA CẬU) ---
 const ROOM_DESCRIPTIONS = {
     "Standard King": "Phòng tiêu chuẩn với giường King Size êm ái, thiết kế hiện đại, đầy đủ tiện nghi cho kỳ nghỉ trọn vẹn.",
     "Deluxe Ocean View": "Tầm nhìn hướng biển tuyệt đẹp với ban công riêng đón gió, nội thất sang trọng nhập khẩu Châu Âu.",
@@ -27,7 +28,7 @@ const ROOM_DESCRIPTIONS = {
     "Presidential Suite": "Đỉnh cao của sự xa hoa, diện tích cực lớn với view Panorama toàn cảnh thành phố và biển."
 };
 
-// --- 2. COMPONENT POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
+// --- 2. COMPONENT POPUP CHI TIẾT (ROOM DETAIL MODAL - MỚI) ---
 const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
     // Xử lý an toàn: Nếu imgIndex undefined thì dùng 0
     const safeIndex = imgIndex || 0;
@@ -39,7 +40,8 @@ const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
         LUXURY_IMAGES[(safeIndex + 3) % LUXURY_IMAGES.length]
     ];
     
-    const description = ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp chuẩn quốc tế.";
+    // Logic lấy mô tả thông minh
+    const description = ROOM_DESCRIPTIONS[room.type] || `Trải nghiệm đẳng cấp 5 sao tại phòng ${room.type} với tiện nghi vượt trội.`;
 
     // Hàm xử lý khi ảnh lỗi -> Đổi sang ảnh dự phòng ngay lập tức
     const handleImgError = (e) => {
@@ -112,9 +114,8 @@ const PaymentResult = () => {
 
     const resultCode = searchParams.get('resultCode');
     const message = searchParams.get('message');
-    
     // Logic của cậu giữ nguyên ở đây
-    const BOOKING_API = "http://localhost:5271/api/Booking/create"; 
+    const BOOKING_API = "http://localhost:5271/api/Booking/create";
 
     useEffect(() => {
         const processBooking = async () => {
@@ -186,7 +187,7 @@ const PaymentResult = () => {
     );
 };
 
-// --- 4. COMPONENT TRANG CHỦ (Home) - ĐÃ SỬA LỖI ---
+// --- 4. COMPONENT TRANG CHỦ (Home) - ĐÃ UPDATE UI ---
 const Home = () => {
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
@@ -321,8 +322,22 @@ const Home = () => {
                     <span>📶 Free Wifi</span>
                   </div>
                   
-                  <p style={{fontSize: '0.85rem', color: '#666', margin: '10px 0', fontStyle: 'italic'}}>
-                     {(ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp...").substring(0,60)}...
+                  {/* --- SỬA FONT & FIX MẤT CHỮ --- */}
+                  <p style={{
+                      fontSize: '0.9rem',           // Chữ to hơn xíu cho sang
+                      color: '#555',                // Màu đậm hơn cho dễ đọc
+                      margin: '15px 0',             // Cách xa tí cho thoáng
+                      lineHeight: '1.5',            // Giãn dòng dễ đọc
+                      fontFamily: 'Lato, sans-serif', // Font chuẩn
+                      // CSS Kỹ thuật: Cắt chữ thông minh (Line Clamp)
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,           // Chỉ hiện tối đa 2 dòng
+                      WebkitBoxOrient: 'vertical',  //
+                      overflow: 'hidden',           //
+                      textOverflow: 'ellipsis',     // Tự thêm dấu ...
+                      height: '2.8em'               // Chiều cao cố định để khung không nhảy
+                  }}>
+                     {ROOM_DESCRIPTIONS[room.type] || `Trải nghiệm đẳng cấp 5 sao tại phòng ${room.type} với đầy đủ tiện nghi.`}
                   </p>
 
                   <div className="card-footer">
