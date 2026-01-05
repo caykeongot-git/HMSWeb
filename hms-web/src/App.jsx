@@ -4,17 +4,20 @@ import './App.css';
 import BookingModal from './BookingModal';
 import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 
-// --- 1. DỮ LIỆU ẢNH & MÔ TẢ (Nâng cấp để dùng cho Gallery) ---
+// --- 1. BỘ SƯU TẬP ẢNH "BẤT TỬ" (Đã update link ổn định hơn) ---
 const LUXURY_IMAGES = [
-  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80", 
-  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1590490360182-f33fb0d41022?auto=format&fit=crop&w=800&q=80", 
-  "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80", 
-  "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80", 
-  "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80", 
-  "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"
+  "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80", // 0. Sang trọng
+  "https://images.unsplash.com/photo-1590490360182-f33fb0d41022?auto=format&fit=crop&w=800&q=80", // 1. Hiện đại
+  "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80", // 2. View biển
+  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80", // 3. Ấm cúng
+  "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80", // 4. Giường đôi
+  "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80", // 5. Suite
+  "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80", // 6. Mát mẻ
+  "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80", // 7. Thượng lưu
 ];
+
+// Ảnh dự phòng (Nếu ảnh trên bị lỗi thì hiện ảnh này)
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80";
 
 const ROOM_DESCRIPTIONS = {
     "Single": "Phòng đơn sang trọng dành cho doanh nhân với bàn làm việc riêng biệt và tầm nhìn hướng phố nhộn nhịp.",
@@ -23,16 +26,24 @@ const ROOM_DESCRIPTIONS = {
     "Deluxe": "Trải nghiệm nghỉ dưỡng đỉnh cao với nội thất nhập khẩu từ Ý, ban công rộng thoáng đón gió biển."
 };
 
-// --- 2. COMPONENT MỚI: POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
+// --- 2. COMPONENT POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
 const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
-    // Logic tạo Gallery: Lấy 3 ảnh tiếp theo trong danh sách để làm ảnh nhỏ
+    // Xử lý an toàn: Nếu imgIndex undefined thì dùng 0
+    const safeIndex = imgIndex || 0;
+    
+    // Gallery giả lập (Lấy 3 ảnh tiếp theo)
     const galleryImages = [
-        LUXURY_IMAGES[(imgIndex + 1) % LUXURY_IMAGES.length],
-        LUXURY_IMAGES[(imgIndex + 2) % LUXURY_IMAGES.length],
-        LUXURY_IMAGES[(imgIndex + 3) % LUXURY_IMAGES.length]
+        LUXURY_IMAGES[(safeIndex + 1) % LUXURY_IMAGES.length],
+        LUXURY_IMAGES[(safeIndex + 2) % LUXURY_IMAGES.length],
+        LUXURY_IMAGES[(safeIndex + 3) % LUXURY_IMAGES.length]
     ];
     
     const description = ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp chuẩn quốc tế.";
+
+    // Hàm xử lý khi ảnh lỗi -> Đổi sang ảnh dự phòng ngay lập tức
+    const handleImgError = (e) => {
+        e.target.src = FALLBACK_IMAGE; 
+    };
 
     return (
         <div className="modal-overlay" onClick={onClose} style={{zIndex: 2000}}>
@@ -43,12 +54,23 @@ const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
                     {/* Cột Trái: Ảnh */}
                     <div className="detail-gallery">
                         <div className="main-img-wrapper">
-                             <img src={LUXURY_IMAGES[imgIndex % LUXURY_IMAGES.length]} alt="Main Room" className="detail-main-img" />
+                             <img 
+                                src={LUXURY_IMAGES[safeIndex % LUXURY_IMAGES.length]} 
+                                onError={handleImgError}
+                                alt="Main Room" 
+                                className="detail-main-img" 
+                             />
                              <div className="tag-overlay">{room.type}</div>
                         </div>
                         <div className="thumb-grid">
                             {galleryImages.map((img, idx) => (
-                                <img key={idx} src={img} alt="Thumb" className="detail-thumb" />
+                                <img 
+                                    key={idx} 
+                                    src={img} 
+                                    onError={handleImgError}
+                                    alt="Thumb" 
+                                    className="detail-thumb" 
+                                />
                             ))}
                         </div>
                     </div>
@@ -64,7 +86,7 @@ const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
                         
                         <div className="detail-features">
                             <div className="feature-item">👥 {room.capacity} Guests</div>
-                            <div className="feature-item">📐 {45 + (imgIndex * 5)}m²</div>
+                            <div className="feature-item">📐 {45 + (safeIndex * 5)}m²</div>
                             <div className="feature-item">📶 High-Speed Wifi</div>
                             <div className="feature-item">❄️ AC & Heating</div>
                         </div>
@@ -81,7 +103,7 @@ const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
     );
 };
 
-// --- 3. GIỮ NGUYÊN COMPONENT PaymentResult (LOGIC CŨ CỦA CẬU) ---
+// --- 3. COMPONENT PaymentResult (GIỮ NGUYÊN LOGIC CỦA CẬU) ---
 const PaymentResult = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -89,6 +111,8 @@ const PaymentResult = () => {
 
     const resultCode = searchParams.get('resultCode');
     const message = searchParams.get('message');
+    
+    // Logic của cậu giữ nguyên ở đây
     const BOOKING_API = "http://localhost:5271/api/Booking/create"; 
 
     useEffect(() => {
@@ -148,12 +172,20 @@ const PaymentResult = () => {
                         <button className="btn-detail" onClick={() => navigate('/')} style={{marginTop:'20px'}}>QUAY LẠI</button>
                     </>
                 )}
+                {status === 'error_save' && (
+                    <>
+                        <div style={{fontSize:'5rem', marginBottom:'10px'}}>⚠️</div>
+                        <h2 style={{color:'#f39c12'}}>Lỗi Lưu Đơn</h2>
+                        <p>Vui lòng liên hệ lễ tân để được hỗ trợ.</p>
+                        <button className="btn-detail" onClick={() => navigate('/')}>VỀ TRANG CHỦ</button>
+                    </>
+                )}
             </div>
         </div>
     );
 };
 
-// --- 4. COMPONENT TRANG CHỦ (Home) - UPDATE NHẸ ---
+// --- 4. COMPONENT TRANG CHỦ (Home) - ĐÃ SỬA LỖI ---
 const Home = () => {
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
@@ -161,15 +193,12 @@ const Home = () => {
   const [roomTypes, setRoomTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('ALL');
   
-  // State cũ của cậu
-  const [selectedRoom, setSelectedRoom] = useState(null); // Modal Booking
-  
-  // State MỚI: Để quản lý Modal Detail
-  const [selectedDetailRoom, setSelectedDetailRoom] = useState(null); 
+  // State quản lý Modal
+  const [selectedRoom, setSelectedRoom] = useState(null); // Modal Booking (Cũ)
+  const [selectedDetailRoom, setSelectedDetailRoom] = useState(null); // Modal Detail (Mới)
 
   const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/Room/available`; 
 
-  // GIỮ NGUYÊN LOGIC GỌI API CỦA CẬU
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -182,8 +211,7 @@ const Home = () => {
         };
         const response = await axios.get(API_URL, config);
         const data = response.data;
-        console.log("Dữ liệu API trả về:", data); 
-
+        
         if (Array.isArray(data)) {
             setRooms(data);
             setFilteredRooms(data);
@@ -209,6 +237,11 @@ const Home = () => {
     } else {
       setFilteredRooms(rooms.filter(room => room.type === type));
     }
+  };
+
+  // Hàm xử lý lỗi ảnh ở trang chủ
+  const handleImgError = (e) => {
+      e.target.src = FALLBACK_IMAGE;
   };
 
   return (
@@ -264,9 +297,10 @@ const Home = () => {
             {filteredRooms.map((room, index) => (
               <div key={room.id} className="room-card">
                 <div className="room-image-wrapper">
-                  {/* Dùng bộ ảnh mới LUXURY_IMAGES */}
+                  {/* Ảnh có xử lý Fallback nếu lỗi */}
                   <img 
                     src={LUXURY_IMAGES[index % LUXURY_IMAGES.length]} 
+                    onError={handleImgError}
                     alt="Hotel Room" 
                     style={{height: '250px', objectFit: 'cover'}} 
                   />
@@ -291,10 +325,11 @@ const Home = () => {
                   </p>
 
                   <div className="card-footer">
-                    {/* UPDATE: Nút Detail giờ sẽ gọi state mở Modal */}
+                    {/* Nút DETAIL mở Modal xịn */}
                     <button className="btn-detail" onClick={() => setSelectedDetailRoom({room, index})}>
                          DETAILS
                     </button>
+                    {/* Nút BOOK mở Booking Form (Cũ) */}
                     <button className="btn-book" onClick={() => setSelectedRoom(room)}>
                       BOOK NOW
                     </button>
@@ -315,7 +350,7 @@ const Home = () => {
         </div>
       </footer>
 
-      {/* MODAL BOOKING (CŨ CỦA CẬU - GIỮ NGUYÊN) */}
+      {/* MODAL BOOKING (CŨ - GIỮ NGUYÊN) */}
       {selectedRoom && (
         <BookingModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
       )}
