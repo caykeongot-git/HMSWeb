@@ -254,8 +254,11 @@ const Home = () => {
           className="logo" 
           onClick={() => {
             navigate('/'); 
-            // Dùng cái này để cuộn mượt mà lên đầu trang
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // --- FIX: Dùng setTimeout để đợi 100ms rồi mới cuộn ---
+            setTimeout(() => {
+                window.scrollTo(0, 0); // Thử bỏ 'smooth' để nó nhảy bụp lên luôn xem có ăn không
+            }, 100);
           }} 
           style={{cursor: 'pointer'}} 
         >
