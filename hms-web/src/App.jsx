@@ -250,22 +250,19 @@ const Home = () => {
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div 
+        {/* Dùng thẻ <a> với href="/" để nó tự load lại trang chủ */}
+        <a 
+          href="/" 
           className="logo" 
-          onClick={() => {
-            navigate('/'); 
-            
-            // --- FIX: Dùng setTimeout để đợi 100ms rồi mới cuộn ---
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-                document.documentElement.scrollTop = 0; // Cuộn thẻ html
-                document.body.scrollTop = 0;            // Cuộn thẻ body (cho Safari/Mobile)
-            }, 100);
-          }} 
-          style={{cursor: 'pointer'}} 
+          style={{
+            textDecoration: 'none', // Bỏ gạch chân của link
+            display: 'flex',        // Giữ layout đẹp
+            alignItems: 'center',
+            cursor: 'pointer'
+          }}
         >
-          MOSHI HOTELS <span>★★★★★</span>
-        </div>
+          MOSHI HOTELS <span style={{marginLeft: '10px'}}>★★★★★</span>
+        </a>
         <ul className="nav-links">
           <li>HOME</li>
           <li>ROOMS & SUITES</li>
