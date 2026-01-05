@@ -257,7 +257,9 @@ const Home = () => {
             
             // --- FIX: Dùng setTimeout để đợi 100ms rồi mới cuộn ---
             setTimeout(() => {
-                window.scrollTo(0, 0); // Thử bỏ 'smooth' để nó nhảy bụp lên luôn xem có ăn không
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0; // Cuộn thẻ html
+                document.body.scrollTop = 0;            // Cuộn thẻ body (cho Safari/Mobile)
             }, 100);
           }} 
           style={{cursor: 'pointer'}} 
