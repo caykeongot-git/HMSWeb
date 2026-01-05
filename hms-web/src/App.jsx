@@ -253,12 +253,13 @@ const Home = () => {
         <div 
           className="logo" 
           onClick={() => {
-            navigate('/'); // Chuyển về trang chủ
-            window.scrollTo(0, 0); // Cuộn lên đầu trang ngay lập tức
+            navigate('/'); 
+            // Dùng cái này để cuộn mượt mà lên đầu trang
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }} 
-          style={{cursor: 'pointer'}} // Biến con trỏ chuột thành hình bàn tay
+          style={{cursor: 'pointer'}} 
         >
-          MOSHI HOTELS
+          MOSHI HOTELS <span>★★★★★</span>
         </div>
         <ul className="nav-links">
           <li>HOME</li>
