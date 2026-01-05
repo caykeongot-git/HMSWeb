@@ -189,6 +189,7 @@ const PaymentResult = () => {
 
 // --- 4. COMPONENT TRANG CHỦ (Home) - ĐÃ UPDATE UI ---
 const Home = () => {
+  const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -249,7 +250,16 @@ const Home = () => {
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">MOSHI HOTELS</div>
+        <div 
+          className="logo" 
+          onClick={() => {
+            navigate('/'); // Chuyển về trang chủ
+            window.scrollTo(0, 0); // Cuộn lên đầu trang ngay lập tức
+          }} 
+          style={{cursor: 'pointer'}} // Biến con trỏ chuột thành hình bàn tay
+        >
+          MOSHI HOTELS
+        </div>
         <ul className="nav-links">
           <li>HOME</li>
           <li>ROOMS & SUITES</li>
