@@ -4,6 +4,88 @@ import './App.css';
 import BookingModal from './BookingModal';
 import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 
+// --- BỘ SƯU TẬP ẢNH "BẤT TỬ" (Dùng ID chuẩn của Unsplash) ---
+const LUXURY_IMAGES = [
+  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80", // 0. Sang trọng
+  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80", // 1. Ấm cúng
+  "https://images.unsplash.com/photo-1590490360182-f33fb0d41022?auto=format&fit=crop&w=800&q=80", // 2. Hiện đại
+  "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80", // 3. View biển
+  "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80", // 4. Giường đôi
+  "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80", // 5. Suite
+  "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80", // 6. Mát mẻ
+  "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80", // 7. Thượng lưu
+];
+
+const ROOM_DESCRIPTIONS = {
+    "Single": "Phòng đơn sang trọng dành cho doanh nhân với bàn làm việc riêng biệt và tầm nhìn hướng phố nhộn nhịp.",
+    "Double": "Không gian lãng mạn hoàn hảo cho các cặp đôi, thiết kế gam màu ấm áp, bồn tắm nằm thư giãn.",
+    "Suite": "Đẳng cấp thượng lưu 5 sao. Phòng khách riêng biệt, phục vụ rượu vang, view biển Panorama bao trọn vịnh.",
+    "Deluxe": "Trải nghiệm nghỉ dưỡng đỉnh cao với nội thất nhập khẩu từ Ý, ban công rộng thoáng đón gió biển."
+};
+
+// --- COMPONENT: POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
+const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
+    // Lấy 3 ảnh khác làm ảnh phụ (Gallery giả lập)
+    const galleryImages = [
+        LUXURY_IMAGES[(imgIndex + 1) % LUXURY_IMAGES.length],
+        LUXURY_IMAGES[(imgIndex + 2) % LUXURY_IMAGES.length],
+        LUXURY_IMAGES[(imgIndex + 3) % LUXURY_IMAGES.length]
+    ];
+    
+    const description = ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp chuẩn quốc tế, mang lại giấc ngủ êm ái.";
+
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="detail-modal-content" onClick={e => e.stopPropagation()}>
+                <button className="close-btn-circle" onClick={onClose}>&times;</button>
+                
+                <div className="detail-grid">
+                    {/* Cột Trái: Ảnh */}
+                    <div className="detail-gallery">
+                        <div className="main-img-wrapper">
+                             <img src={LUXURY_IMAGES[imgIndex % LUXURY_IMAGES.length]} alt="Main Room" className="detail-main-img" />
+                             <div className="tag-overlay">{room.type}</div>
+                        </div>
+                        <div className="thumb-grid">
+                            {galleryImages.map((img, idx) => (
+                                <img key={idx} src={img} alt="Thumb" className="detail-thumb" />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Cột Phải: Thông tin */}
+                    <div className="detail-info">
+                        <h2 className="detail-title">Room {room.roomNumber} <span className="star-rating">★★★★★</span></h2>
+                        <p className="detail-price">
+                            {room.price.toLocaleString()} VND <span style={{fontSize:'0.6em', color:'#777'}}>/ Night</span>
+                        </p>
+                        
+                        <div className="detail-divider"></div>
+                        
+                        <p className="detail-desc">{description}</p>
+                        
+                        <div className="detail-features">
+                            <div className="feature-item">👥 {room.capacity} Guests</div>
+                            <div className="feature-item">📐 {45 + (imgIndex * 5)}m²</div>
+                            <div className="feature-item">📶 High-Speed Wifi</div>
+                            <div className="feature-item">❄️ Air Conditioner</div>
+                            <div className="feature-item">📺 4K Smart TV</div>
+                            <div className="feature-item">🛁 Bathtub</div>
+                        </div>
+
+                        <div className="detail-actions">
+                            <button className="btn-book-large" onClick={() => { onClose(); onBook(room); }}>
+                                BOOK THIS ROOM NOW
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 // --- COMPONENT KẾT QUẢ THANH TOÁN (PaymentResult) ---
 const PaymentResult = () => {
     const [searchParams] = useSearchParams();
@@ -12,7 +94,7 @@ const PaymentResult = () => {
 
     const resultCode = searchParams.get('resultCode');
     const message = searchParams.get('message');
-    const BOOKING_API = "http://localhost:5271/api/Booking/create"; 
+    const BOOKING_API = `${import.meta.env.VITE_API_BASE_URL}/api/Booking/create`; 
 
     useEffect(() => {
         const processBooking = async () => {
@@ -85,101 +167,54 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [roomTypes, setRoomTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('ALL');
-  const [selectedRoom, setSelectedRoom] = useState(null);
-
-  // -------------------------------------------------------------------------------------
-  // --- SENIOR FIX 1: BỘ ẢNH CHUẨN KHÁCH SẠN 5 SAO (Thay vì 1 ảnh lặp lại) ---
-  const HOTEL_IMAGES = [
-    "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1590490360182-f33fb0d41022?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80"
-  ];
-
-  // --- SENIOR FIX 2: MÔ TẢ GIẢ LẬP CHO TỪNG LOẠI PHÒNG (Để nút Detail có cái mà hiện) ---
-  const ROOM_DESCRIPTIONS = {
-    "Single": "Phòng đơn sang trọng với tầm nhìn hướng phố, trang bị đầy đủ tiện nghi cho doanh nhân.",
-    "Double": "Không gian lãng mạn dành cho các cặp đôi, bồn tắm nằm và ban công rộng thoáng.",
-    "Suite": "Đẳng cấp thượng lưu với phòng khách riêng biệt, phục vụ rượu vang và bữa sáng tại phòng.",
-    "Deluxe": "Trải nghiệm nghỉ dưỡng đỉnh cao với nội thất nhập khẩu Ý và view biển Panorama."
-  };
-
-  // Hàm xử lý khi bấm nút DETAILS (Thêm cái này để nút không bị liệt)
-  const handleShowDetail = (room) => {
-    const desc = ROOM_DESCRIPTIONS[room.type] || "Trải nghiệm tiện nghi đẳng cấp 5 sao quốc tế.";
-    // Dùng alert cho nhanh gọn lẹ, hoặc nếu cậu pro hơn thì làm Modal riêng. 
-    // Nhưng deadline gấp thì ALERT đẹp + xuống dòng là đủ ăn điểm chữa cháy.
-    alert(`🌟 CHI TIẾT PHÒNG ${room.roomNumber} (${room.type})\n\nℹ️ Mô tả: ${desc}\n\n💰 Giá: ${room.price.toLocaleString()} VND/đêm\n✨ Tiện ích: ${room.capacity} Khách, Wifi, Minibar, Smart TV.\n\n👉 Vui lòng nhấn BOOK NOW để đặt phòng này!`);
-  };
-  // -------------------------------------------------------------------------------------
+  
+  // State quản lý Modal
+  const [selectedBookingRoom, setSelectedBookingRoom] = useState(null); // Modal Booking
+  const [selectedDetailRoom, setSelectedDetailRoom] = useState(null);   // Modal Detail (MỚI)
 
   const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/Room/available`; 
 
-useEffect(() => {
+  useEffect(() => {
     const fetchRooms = async () => {
       try {
-        console.log("Đang gọi API:", API_URL); // Log 1: Xem link đúng chưa
-
         const config = {
             headers: {
                 "ngrok-skip-browser-warning": "true",
                 "Content-Type": "application/json"
             }
         };
-
         const response = await axios.get(API_URL, config);
         const data = response.data;
         
-        console.log("Dữ liệu API trả về:", data); // Log 2: Quan trọng nhất!
-
-        // KIỂM TRA: Nếu data là mảng thì mới chạy tiếp
         if (Array.isArray(data)) {
             setRooms(data);
             setFilteredRooms(data);
-            // Sửa lỗi: Chỉ map khi chắc chắn là mảng
             const types = ['ALL', ...new Set(data.map(room => room.type))];
             setRoomTypes(types);
-        } else {
-            console.error("🔥 LỖI: API không trả về danh sách!", data);
-            // Nếu data là HTML (chuỗi), nó sẽ hiện ra đây
-            if (typeof data === 'string') {
-                console.warn("⚠️ Có vẻ như Ngrok hoặc Server đang trả về HTML thay vì JSON.");
-            }
         }
       } catch (error) {
-        console.error("❌ Lỗi gọi API:", error);
-        // Log chi tiết lỗi mạng nếu có
-        if (error.response) {
-            console.error("Status:", error.response.status);
-            console.error("Data:", error.response.data);
-        }
+        console.error("Lỗi API:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchRooms();
   }, []);
 
   const handleFilterChange = (e) => {
     const type = e.target.value;
     setSelectedType(type);
-    if (type === 'ALL') {
-      setFilteredRooms(rooms);
-    } else {
-      setFilteredRooms(rooms.filter(room => room.type === type));
-    }
+    if (type === 'ALL') setFilteredRooms(rooms);
+    else setFilteredRooms(rooms.filter(room => room.type === type));
   };
 
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">MOSHI HOTELS</div>
+        <div className="logo">MOSHI HOTELS <span>★★★★★</span></div>
         <ul className="nav-links">
           <li>HOME</li>
-          <li>ROOMS & SUITES</li>
+          <li>SUITES</li>
           <li>DINING</li>
           <li>SPA</li>
           <li className="active">BOOK NOW</li>
@@ -212,26 +247,23 @@ useEffect(() => {
               </select>
             </div>
           )}
-          <p style={{marginTop: '10px', fontSize: '0.9rem', fontStyle: 'italic', color: '#777'}}>
-            Hiển thị {filteredRooms.length} phòng trống
-          </p>
         </div>
         
         {loading ? (
           <div className="loading-container">
             <div className="spinner"></div>
-            <p>Đang tìm phòng tốt nhất cho bạn...</p>
+            <p>Đang tải danh sách phòng hạng sang...</p>
           </div>
         ) : (
           <div className="room-grid">
-            {filteredRooms.map((room, index) => ( // Nhớ thêm index vào tham số
+            {filteredRooms.map((room, index) => (
               <div key={room.id} className="room-card">
                 <div className="room-image-wrapper">
-                  {/* FIX 1: Lấy ảnh theo thứ tự index để không bị trùng */}
+                  {/* Sử dụng ảnh từ mảng LUXURY_IMAGES theo index để không bị trùng */}
                   <img 
-                    src={HOTEL_IMAGES[index % HOTEL_IMAGES.length]} 
+                    src={LUXURY_IMAGES[index % LUXURY_IMAGES.length]} 
                     alt="Hotel Room" 
-                    style={{height: '250px', objectFit: 'cover'}} // Thêm style cứng để ảnh đều nhau tăm tắp
+                    style={{height: '250px', objectFit: 'cover'}}
                   />
                   <div className="price-badge">
                     <span className="currency">VND</span>
@@ -245,23 +277,21 @@ useEffect(() => {
                   <h3 className="room-number">Room {room.roomNumber}</h3>
                   <div className="room-features">
                     <span>👥 {room.capacity} Guests</span>
-                    <span>📐 {45 + (index * 5)}m²</span> {/* Hack nhẹ diện tích cho phong phú */}
+                    <span>📐 {45 + (index * 5)}m²</span>
                     <span>📶 Free Wifi</span>
                   </div>
                   
-                  {/* Đã thêm mô tả ngắn (Cắt bớt text cho đẹp layout) */}
-                  <p style={{fontSize: '0.85rem', color: '#666', margin: '10px 0', fontStyle: 'italic'}}>
-                     {ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp..."}
+                  {/* Mô tả ngắn (cắt bớt) */}
+                  <p className="room-short-desc">
+                     {(ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp...").substring(0, 60)}...
                   </p>
 
                   <div className="card-footer">
-                    {/* FIX 2: Nút DETAILS giờ đã có sự sống */}
-                    <button className="btn-detail" onClick={() => handleShowDetail(room)}>
+                    {/* Nút DETAIL giờ sẽ mở Modal xịn */}
+                    <button className="btn-detail" onClick={() => setSelectedDetailRoom({room, index})}>
                         DETAILS
                     </button>
-                    
-                    {/* FIX 3: Nút BOOK NOW */}
-                    <button className="btn-book" onClick={() => setSelectedRoom(room)}>
+                    <button className="btn-book" onClick={() => setSelectedBookingRoom(room)}>
                       BOOK NOW
                     </button>
                   </div>
@@ -281,14 +311,27 @@ useEffect(() => {
         </div>
       </footer>
 
-      {selectedRoom && (
-        <BookingModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
+      {/* --- MODAL BOOKING (Cũ) --- */}
+      {selectedBookingRoom && (
+        <BookingModal room={selectedBookingRoom} onClose={() => setSelectedBookingRoom(null)} />
+      )}
+
+      {/* --- MODAL DETAIL (Mới - Xịn xò) --- */}
+      {selectedDetailRoom && (
+        <RoomDetailModal 
+            room={selectedDetailRoom.room} 
+            imgIndex={selectedDetailRoom.index}
+            onClose={() => setSelectedDetailRoom(null)} 
+            onBook={(r) => {
+                setSelectedDetailRoom(null); // Đóng Detail
+                setSelectedBookingRoom(r);   // Mở Booking
+            }}
+        />
       )}
     </div>
   );
 };
 
-// --- APP COMPONENT CHÍNH ---
 function App() {
   return (
     <BrowserRouter>

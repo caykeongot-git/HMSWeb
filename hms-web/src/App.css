@@ -952,3 +952,206 @@ body {
   transform: none;
   box-shadow: none;
 }
+
+/* --- 5-STAR HOTEL STYLES (New) --- */
+
+/* 1. Animation cho Modal Detail */
+.detail-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 4px; /* Bo góc ít để sang trọng */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  animation: slideUpFade 0.4s ease-out; /* Hiệu ứng trượt lên */
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn-circle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s;
+}
+.close-btn-circle:hover {
+  background: #c0392b;
+  color: white;
+  transform: rotate(90deg);
+}
+
+/* 2. Grid Layout cho Modal Detail (Trái Ảnh - Phải Info) */
+.detail-grid {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    flex-direction: column;
+  } /* Mobile thì xếp dọc */
+}
+
+.detail-gallery {
+  flex: 1.2;
+  background: #000;
+}
+.detail-main-img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  display: block;
+}
+.main-img-wrapper {
+  position: relative;
+}
+.tag-overlay {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 15px;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.thumb-grid {
+  display: flex;
+  height: 100px;
+}
+.detail-thumb {
+  flex: 1;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  transition: 0.3s;
+  cursor: pointer;
+  border-right: 1px solid #fff;
+}
+.detail-thumb:hover {
+  opacity: 1;
+}
+
+.detail-info {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. Typography Sang chảnh */
+.detail-title {
+  font-family: "Playfair Display", serif; /* Font chữ có chân sang trọng */
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.star-rating {
+  color: #f1c40f;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+
+.detail-price {
+  font-size: 1.8rem;
+  color: #c0392b; /* Màu đỏ đô sang trọng */
+  font-weight: bold;
+}
+
+.detail-divider {
+  height: 1px;
+  background: #eee;
+  margin: 15px 0;
+  width: 50px;
+}
+
+.detail-desc {
+  color: #666;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* 4. Feature List đẹp mắt */
+.detail-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.feature-item {
+  font-size: 0.9rem;
+  color: #444;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* 5. Nút Book to bự */
+.detail-actions {
+  margin-top: auto;
+}
+.btn-book-large {
+  width: 100%;
+  padding: 15px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+}
+.btn-book-large:hover {
+  background: #c0392b; /* Hover đổi màu đỏ */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(192, 57, 43, 0.4);
+}
+
+/* 6. Fix lỗi Room Card ở Home */
+.room-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+.room-card:hover {
+  transform: translateY(-10px); /* Nổi lên khi rê chuột */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+.room-image-wrapper img {
+  transition: transform 0.5s ease;
+}
+.room-card:hover .room-image-wrapper img {
+  transform: scale(1.1); /* Zoom ảnh nhẹ khi rê chuột */
+}
+.room-short-desc {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 10px 0;
+  font-style: italic;
+  min-height: 35px; /* Giữ khung đều nhau */
+}
