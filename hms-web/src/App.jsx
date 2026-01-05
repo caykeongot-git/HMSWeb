@@ -4,16 +4,16 @@ import './App.css';
 import BookingModal from './BookingModal';
 import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 
-// --- BỘ SƯU TẬP ẢNH "BẤT TỬ" (Dùng ID chuẩn của Unsplash) ---
+// --- 1. DỮ LIỆU ẢNH & MÔ TẢ (Nâng cấp để dùng cho Gallery) ---
 const LUXURY_IMAGES = [
-  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80", // 0. Sang trọng
-  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80", // 1. Ấm cúng
-  "https://images.unsplash.com/photo-1590490360182-f33fb0d41022?auto=format&fit=crop&w=800&q=80", // 2. Hiện đại
-  "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80", // 3. View biển
-  "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80", // 4. Giường đôi
-  "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80", // 5. Suite
-  "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80", // 6. Mát mẻ
-  "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80", // 7. Thượng lưu
+  "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80", 
+  "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1590490360182-f33fb0d41022?auto=format&fit=crop&w=800&q=80", 
+  "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=800&q=80", 
+  "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80", 
+  "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=800&q=80", 
+  "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=800&q=80",
+  "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"
 ];
 
 const ROOM_DESCRIPTIONS = {
@@ -23,19 +23,19 @@ const ROOM_DESCRIPTIONS = {
     "Deluxe": "Trải nghiệm nghỉ dưỡng đỉnh cao với nội thất nhập khẩu từ Ý, ban công rộng thoáng đón gió biển."
 };
 
-// --- COMPONENT: POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
+// --- 2. COMPONENT MỚI: POPUP CHI TIẾT (ROOM DETAIL MODAL) ---
 const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
-    // Lấy 3 ảnh khác làm ảnh phụ (Gallery giả lập)
+    // Logic tạo Gallery: Lấy 3 ảnh tiếp theo trong danh sách để làm ảnh nhỏ
     const galleryImages = [
         LUXURY_IMAGES[(imgIndex + 1) % LUXURY_IMAGES.length],
         LUXURY_IMAGES[(imgIndex + 2) % LUXURY_IMAGES.length],
         LUXURY_IMAGES[(imgIndex + 3) % LUXURY_IMAGES.length]
     ];
     
-    const description = ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp chuẩn quốc tế, mang lại giấc ngủ êm ái.";
+    const description = ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp chuẩn quốc tế.";
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} style={{zIndex: 2000}}>
             <div className="detail-modal-content" onClick={e => e.stopPropagation()}>
                 <button className="close-btn-circle" onClick={onClose}>&times;</button>
                 
@@ -59,18 +59,14 @@ const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
                         <p className="detail-price">
                             {room.price.toLocaleString()} VND <span style={{fontSize:'0.6em', color:'#777'}}>/ Night</span>
                         </p>
-                        
                         <div className="detail-divider"></div>
-                        
                         <p className="detail-desc">{description}</p>
                         
                         <div className="detail-features">
                             <div className="feature-item">👥 {room.capacity} Guests</div>
                             <div className="feature-item">📐 {45 + (imgIndex * 5)}m²</div>
                             <div className="feature-item">📶 High-Speed Wifi</div>
-                            <div className="feature-item">❄️ Air Conditioner</div>
-                            <div className="feature-item">📺 4K Smart TV</div>
-                            <div className="feature-item">🛁 Bathtub</div>
+                            <div className="feature-item">❄️ AC & Heating</div>
                         </div>
 
                         <div className="detail-actions">
@@ -85,8 +81,7 @@ const RoomDetailModal = ({ room, imgIndex, onClose, onBook }) => {
     );
 };
 
-
-// --- COMPONENT KẾT QUẢ THANH TOÁN (PaymentResult) ---
+// --- 3. GIỮ NGUYÊN COMPONENT PaymentResult (LOGIC CŨ CỦA CẬU) ---
 const PaymentResult = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -94,7 +89,7 @@ const PaymentResult = () => {
 
     const resultCode = searchParams.get('resultCode');
     const message = searchParams.get('message');
-    const BOOKING_API = `${import.meta.env.VITE_API_BASE_URL}/api/Booking/create`; 
+    const BOOKING_API = "http://localhost:5271/api/Booking/create"; 
 
     useEffect(() => {
         const processBooking = async () => {
@@ -136,7 +131,6 @@ const PaymentResult = () => {
                         <h2>Đang xác thực giao dịch...</h2>
                     </>
                 )}
-
                 {status === 'success' && (
                     <>
                         <div style={{fontSize:'5rem', marginBottom:'10px'}}>✅</div>
@@ -146,7 +140,6 @@ const PaymentResult = () => {
                         <button className="btn-book" onClick={() => navigate('/')}>VỀ TRANG CHỦ</button>
                     </>
                 )}
-
                 {status === 'fail' && (
                     <>
                         <div style={{fontSize:'5rem', marginBottom:'10px'}}>❌</div>
@@ -160,7 +153,7 @@ const PaymentResult = () => {
     );
 };
 
-// --- COMPONENT TRANG CHỦ (Home) ---
+// --- 4. COMPONENT TRANG CHỦ (Home) - UPDATE NHẸ ---
 const Home = () => {
   const [rooms, setRooms] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]);
@@ -168,15 +161,19 @@ const Home = () => {
   const [roomTypes, setRoomTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('ALL');
   
-  // State quản lý Modal
-  const [selectedBookingRoom, setSelectedBookingRoom] = useState(null); // Modal Booking
-  const [selectedDetailRoom, setSelectedDetailRoom] = useState(null);   // Modal Detail (MỚI)
+  // State cũ của cậu
+  const [selectedRoom, setSelectedRoom] = useState(null); // Modal Booking
+  
+  // State MỚI: Để quản lý Modal Detail
+  const [selectedDetailRoom, setSelectedDetailRoom] = useState(null); 
 
   const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/Room/available`; 
 
+  // GIỮ NGUYÊN LOGIC GỌI API CỦA CẬU
   useEffect(() => {
     const fetchRooms = async () => {
       try {
+        console.log("Đang gọi API:", API_URL); 
         const config = {
             headers: {
                 "ngrok-skip-browser-warning": "true",
@@ -185,15 +182,18 @@ const Home = () => {
         };
         const response = await axios.get(API_URL, config);
         const data = response.data;
-        
+        console.log("Dữ liệu API trả về:", data); 
+
         if (Array.isArray(data)) {
             setRooms(data);
             setFilteredRooms(data);
             const types = ['ALL', ...new Set(data.map(room => room.type))];
             setRoomTypes(types);
+        } else {
+            console.error("🔥 LỖI: API không trả về danh sách!", data);
         }
       } catch (error) {
-        console.error("Lỗi API:", error);
+        console.error("❌ Lỗi gọi API:", error);
       } finally {
         setLoading(false);
       }
@@ -204,17 +204,20 @@ const Home = () => {
   const handleFilterChange = (e) => {
     const type = e.target.value;
     setSelectedType(type);
-    if (type === 'ALL') setFilteredRooms(rooms);
-    else setFilteredRooms(rooms.filter(room => room.type === type));
+    if (type === 'ALL') {
+      setFilteredRooms(rooms);
+    } else {
+      setFilteredRooms(rooms.filter(room => room.type === type));
+    }
   };
 
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo">MOSHI HOTELS <span>★★★★★</span></div>
+        <div className="logo">MOSHI HOTELS</div>
         <ul className="nav-links">
           <li>HOME</li>
-          <li>SUITES</li>
+          <li>ROOMS & SUITES</li>
           <li>DINING</li>
           <li>SPA</li>
           <li className="active">BOOK NOW</li>
@@ -234,7 +237,6 @@ const Home = () => {
         <div className="section-title">
           <h2>Accommodations</h2>
           <p>Tìm không gian hoàn hảo cho kỳ nghỉ của bạn</p>
-          
           {!loading && (
             <div className="filter-container">
               <label className="filter-label">Filter by Room Type:</label>
@@ -247,23 +249,26 @@ const Home = () => {
               </select>
             </div>
           )}
+          <p style={{marginTop: '10px', fontSize: '0.9rem', fontStyle: 'italic', color: '#777'}}>
+             Hiển thị {filteredRooms.length} phòng trống
+          </p>
         </div>
         
         {loading ? (
           <div className="loading-container">
             <div className="spinner"></div>
-            <p>Đang tải danh sách phòng hạng sang...</p>
+            <p>Đang tìm phòng tốt nhất cho bạn...</p>
           </div>
         ) : (
           <div className="room-grid">
             {filteredRooms.map((room, index) => (
               <div key={room.id} className="room-card">
                 <div className="room-image-wrapper">
-                  {/* Sử dụng ảnh từ mảng LUXURY_IMAGES theo index để không bị trùng */}
+                  {/* Dùng bộ ảnh mới LUXURY_IMAGES */}
                   <img 
                     src={LUXURY_IMAGES[index % LUXURY_IMAGES.length]} 
                     alt="Hotel Room" 
-                    style={{height: '250px', objectFit: 'cover'}}
+                    style={{height: '250px', objectFit: 'cover'}} 
                   />
                   <div className="price-badge">
                     <span className="currency">VND</span>
@@ -281,17 +286,16 @@ const Home = () => {
                     <span>📶 Free Wifi</span>
                   </div>
                   
-                  {/* Mô tả ngắn (cắt bớt) */}
-                  <p className="room-short-desc">
-                     {(ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp...").substring(0, 60)}...
+                  <p style={{fontSize: '0.85rem', color: '#666', margin: '10px 0', fontStyle: 'italic'}}>
+                     {(ROOM_DESCRIPTIONS[room.type] || "Tiện nghi cao cấp...").substring(0,60)}...
                   </p>
 
                   <div className="card-footer">
-                    {/* Nút DETAIL giờ sẽ mở Modal xịn */}
+                    {/* UPDATE: Nút Detail giờ sẽ gọi state mở Modal */}
                     <button className="btn-detail" onClick={() => setSelectedDetailRoom({room, index})}>
-                        DETAILS
+                         DETAILS
                     </button>
-                    <button className="btn-book" onClick={() => setSelectedBookingRoom(room)}>
+                    <button className="btn-book" onClick={() => setSelectedRoom(room)}>
                       BOOK NOW
                     </button>
                   </div>
@@ -311,20 +315,20 @@ const Home = () => {
         </div>
       </footer>
 
-      {/* --- MODAL BOOKING (Cũ) --- */}
-      {selectedBookingRoom && (
-        <BookingModal room={selectedBookingRoom} onClose={() => setSelectedBookingRoom(null)} />
+      {/* MODAL BOOKING (CŨ CỦA CẬU - GIỮ NGUYÊN) */}
+      {selectedRoom && (
+        <BookingModal room={selectedRoom} onClose={() => setSelectedRoom(null)} />
       )}
 
-      {/* --- MODAL DETAIL (Mới - Xịn xò) --- */}
+      {/* MODAL DETAIL (MỚI - THÊM VÀO) */}
       {selectedDetailRoom && (
         <RoomDetailModal 
             room={selectedDetailRoom.room} 
             imgIndex={selectedDetailRoom.index}
             onClose={() => setSelectedDetailRoom(null)} 
             onBook={(r) => {
-                setSelectedDetailRoom(null); // Đóng Detail
-                setSelectedBookingRoom(r);   // Mở Booking
+                setSelectedDetailRoom(null); // Đóng Detail trước
+                setSelectedRoom(r);          // Mở form Booking sau
             }}
         />
       )}
@@ -332,6 +336,7 @@ const Home = () => {
   );
 };
 
+// --- APP COMPONENT CHÍNH ---
 function App() {
   return (
     <BrowserRouter>

@@ -1155,3 +1155,180 @@ body {
   font-style: italic;
   min-height: 35px; /* Giữ khung đều nhau */
 }
+
+/* ========================================= */
+/* --- THÊM STYLE CHO MODAL DETAIL MỚI --- */
+/* ========================================= */
+
+.detail-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 900px;
+  border-radius: 4px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  animation: slideUpFade 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn-circle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.close-btn-circle:hover {
+  background: #c0392b;
+  color: white;
+  transform: rotate(90deg);
+}
+
+.detail-grid {
+  display: flex;
+  flex-direction: row;
+}
+@media (max-width: 768px) {
+  .detail-grid {
+    flex-direction: column;
+  }
+}
+
+/* Phần bên trái: Gallery ảnh */
+.detail-gallery {
+  flex: 1.2;
+  background: #000;
+}
+.detail-main-img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  display: block;
+}
+.main-img-wrapper {
+  position: relative;
+}
+.tag-overlay {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 5px 15px;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333;
+}
+.thumb-grid {
+  display: flex;
+  height: 100px;
+}
+.detail-thumb {
+  flex: 1;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  transition: 0.3s;
+  cursor: pointer;
+  border-right: 1px solid #fff;
+}
+.detail-thumb:hover {
+  opacity: 1;
+}
+
+/* Phần bên phải: Thông tin */
+.detail-info {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.detail-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+.star-rating {
+  color: #f1c40f;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+.detail-price {
+  font-size: 1.8rem;
+  color: #c0392b;
+  font-weight: bold;
+}
+.detail-divider {
+  height: 1px;
+  background: #eee;
+  margin: 15px 0;
+  width: 50px;
+}
+.detail-desc {
+  color: #666;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+.detail-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.feature-item {
+  font-size: 0.9rem;
+  color: #444;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* Nút Book trong Modal */
+.detail-actions {
+  margin-top: auto;
+}
+.btn-book-large {
+  width: 100%;
+  padding: 15px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.btn-book-large:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(192, 57, 43, 0.4);
+}
