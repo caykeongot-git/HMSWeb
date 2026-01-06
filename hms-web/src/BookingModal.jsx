@@ -151,7 +151,6 @@ const getVietQRUrl = () => {
                   <label>Email (To receive invoice)</label>
                   <input type="email" name="email" placeholder="example@gmail.com" onChange={handleChange} />
               </div>
-                // --- ĐOẠN CODE ĐÚNG (Copy đè vào chỗ cũ) ---
                 <div className="form-row">
                     <div className="form-group">
                         <label>Check-In</label>
