@@ -84,9 +84,11 @@ const BookingModal = ({ room, onClose }) => {
       const bankId = "MB"; // Ngân hàng MB
       const accountNo = "0916897032"; // STK của cậu
       const accountName = "NGUYEN DINH AN NINH";
-      const amount = totalPrice > 0 ? totalPrice : room.price;
-      const description = `PAYMENT ${formData.phone}`; // Nội dung chuyển khoản
-      
+    //   const amount = totalPrice > 0 ? totalPrice : room.price;
+    //   const description = `PAYMENT ${formData.phone}`; // Nội dung chuyển khoản
+      const fullAmount = totalPrice > 0 ? totalPrice : room.price;
+      const depositAmount = Math.ceil(fullAmount * 0.5); // Lấy 50% và làm tròn trần
+      const description = `DEPOSIT ${formData.phone}`; // Đổi nội dung thành DEPOSIT
       // Template compact2
       return `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(description)}&accountName=${encodeURIComponent(accountName)}`;
   };
@@ -204,8 +206,15 @@ const BookingModal = ({ room, onClose }) => {
                     <img src={getVietQRUrl()} alt="VNPAY QR" width="220" style={{display: 'block'}} />
                 </div>
 
-                <div style={{margin: '20px 0', fontSize: '1.2rem', fontWeight: 'bold', color: '#2c3e50'}}>
+                {/* <div style={{margin: '20px 0', fontSize: '1.2rem', fontWeight: 'bold', color: '#2c3e50'}}>
                     Tổng tiền: {totalPrice.toLocaleString()} VND
+                </div> */}
+
+                <div style={{margin: '20px 0', fontSize: '1.2rem', color: '#2c3e50'}}>
+                <div>Tổng tiền phòng: <s>{totalPrice.toLocaleString()} VND</s></div>
+                    <div style={{fontWeight: 'bold', color: '#ed1c24', fontSize: '1.4rem'}}>
+                        Cần cọc (50%): {(Math.ceil((totalPrice > 0 ? totalPrice : room.price) * 0.5)).toLocaleString()} VND
+                    </div>
                 </div>
 
                 <button 
