@@ -80,17 +80,18 @@ const BookingModal = ({ room, onClose }) => {
   };
 
   // --- 2. LOGIC MỚI (VNPAY/VIETQR) - CHẮC CHẮN CHẠY ---
-  const getVietQRUrl = () => {
-      const bankId = "MB"; // Ngân hàng MB
-      const accountNo = "0916897032"; // STK của cậu
+const getVietQRUrl = () => {
+      const bankId = "MB"; 
+      const accountNo = "0916897032"; 
       const accountName = "NGUYEN DINH AN NINH";
-    //   const amount = totalPrice > 0 ? totalPrice : room.price;
-    //   const description = `PAYMENT ${formData.phone}`; // Nội dung chuyển khoản
+      
       const fullAmount = totalPrice > 0 ? totalPrice : room.price;
-      const depositAmount = Math.ceil(fullAmount * 0.5); // Lấy 50% và làm tròn trần
-      const description = `DEPOSIT ${formData.phone}`; // Đổi nội dung thành DEPOSIT
-      // Template compact2
-      return `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(description)}&accountName=${encodeURIComponent(accountName)}`;
+      const depositAmount = Math.ceil(fullAmount * 0.5); // Cọc 50%
+      
+      const description = `DEPOSIT ${formData.phone}`; 
+      
+      // Sửa 'amount' thành 'depositAmount' ở đây 👇
+      return `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${depositAmount}&addInfo=${encodeURIComponent(description)}&accountName=${encodeURIComponent(accountName)}`;
   };
 
   const handleVnPayClick = () => {
