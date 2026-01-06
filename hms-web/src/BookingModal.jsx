@@ -152,8 +152,22 @@ const getVietQRUrl = () => {
                   <input type="email" name="email" placeholder="example@gmail.com" onChange={handleChange} />
               </div>
                 <div className="form-row">
-                    <div className="form-group"><label>Check-In</label><input type="date" name="checkIn" required onChange={handleChange} /></div>
-                    <div className="form-group"><label>Check-Out</label><input type="date" name="checkOut" required onChange={handleChange} /></div>
+                    <div className="form-group"><label>Check-In</label><input 
+                                                                            type="datetime-local" // <--- Đổi thành cái này
+                                                                            required
+                                                                            value={checkIn}
+                                                                            onChange={(e) => setCheckIn(e.target.value)}
+                                                                            className="form-control"
+                                                                        />
+                    </div>
+                    <div className="form-group"><label>Check-Out</label><input 
+                                                                            type="datetime-local" // <--- Đổi thành cái này
+                                                                            required
+                                                                            value={checkOut}
+                                                                            onChange={(e) => setCheckOut(e.target.value)}
+                                                                            className="form-control"
+                                                                        />
+                    </div>
                 </div>
                 {status.msg && <div className={`status-msg ${status.type}`}>{status.msg}</div>}
                 <button type="submit" className="btn-submit">CONTINUE</button>
