@@ -151,22 +151,29 @@ const getVietQRUrl = () => {
                   <label>Email (To receive invoice)</label>
                   <input type="email" name="email" placeholder="example@gmail.com" onChange={handleChange} />
               </div>
+                // --- ĐOẠN CODE ĐÚNG (Copy đè vào chỗ cũ) ---
                 <div className="form-row">
-                    <div className="form-group"><label>Check-In</label><input 
-                                                                            type="datetime-local" // <--- Đổi thành cái này
-                                                                            required
-                                                                            value={checkIn}
-                                                                            onChange={(e) => setCheckIn(e.target.value)}
-                                                                            className="form-control"
-                                                                        />
+                    <div className="form-group">
+                        <label>Check-In</label>
+                        <input 
+                            type="datetime-local"
+                            name="checkIn"            // Thêm name để hàm handleChange nhận diện
+                            required
+                            value={formData.checkIn}  // Lấy dữ liệu từ formData
+                            onChange={handleChange}   // Dùng chung hàm handleChange
+                            className="form-control"
+                        />
                     </div>
-                    <div className="form-group"><label>Check-Out</label><input 
-                                                                            type="datetime-local" // <--- Đổi thành cái này
-                                                                            required
-                                                                            value={checkOut}
-                                                                            onChange={(e) => setCheckOut(e.target.value)}
-                                                                            className="form-control"
-                                                                        />
+                    <div className="form-group">
+                        <label>Check-Out</label>
+                        <input 
+                            type="datetime-local"
+                            name="checkOut"           // Thêm name để hàm handleChange nhận diện
+                            required
+                            value={formData.checkOut} // Lấy dữ liệu từ formData
+                            onChange={handleChange}   // Dùng chung hàm handleChange
+                            className="form-control"
+                        />
                     </div>
                 </div>
                 {status.msg && <div className={`status-msg ${status.type}`}>{status.msg}</div>}
