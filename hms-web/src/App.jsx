@@ -161,7 +161,7 @@ const PaymentResult = () => {
                     <>
                         <div style={{fontSize:'5rem', marginBottom:'10px'}}>✅</div>
                         <h2 style={{color:'#27ae60', fontFamily:'Playfair Display'}}>Thanh Toán Thành Công!</h2>
-                        <p>Cảm ơn bạn đã lựa chọn Moshi Hotel.</p>
+                        <p>Cảm ơn bạn đã lựa chọn Sakura Hotel.</p>
                         <div className="divider" style={{width:'50px', margin:'20px auto', backgroundColor:'#ccc'}}></div>
                         <button className="btn-book" onClick={() => navigate('/')}>VỀ TRANG CHỦ</button>
                     </>
@@ -261,7 +261,7 @@ const Home = () => {
             cursor: 'pointer'
           }}
         >
-          MOSHI HOTELS <span style={{marginLeft: '10px'}}>★★★★★</span>
+          SAKURA HOTELS <span style={{marginLeft: '10px'}}>★★★★★</span>
         </a>
         <ul className="nav-links">
           <li>HOME</li>
@@ -372,10 +372,10 @@ const Home = () => {
 
       <footer className="footer">
         <div className="footer-content">
-          <h3>MOSHI HOTEL</h3>
+          <h3>SAKURA HOTEL</h3>
           <p>123 Beach Road, Danang City, Vietnam</p>
           <p>Hotline: (+84) 909 123 456</p>
-          <p className="copyright">© 2026 Moshi Hotel Group. All rights reserved.</p>
+          <p className="copyright">© 2026 Sakura Hotel Group. All rights reserved.</p>
         </div>
       </footer>
 
